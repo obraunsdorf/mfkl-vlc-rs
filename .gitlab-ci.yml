@@ -1,0 +1,17 @@
+stages:
+    - build
+    
+variables:
+    VLC_DEBIAN_IMAGE: registry.videolan.org/vlc-debian-unstable:20200229201904
+
+vlc-rs-build:
+    tags:
+        - docker
+        - amd64
+    stage: build
+    image:
+        name: $VLC_DEBIAN_IMAGE
+    script:
+        - curl https://sh.rustup.rs -sSf | sh -s -- -y
+        - source $HOME/.cargo/env
+        - cargo build --all
