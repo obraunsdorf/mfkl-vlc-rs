@@ -2,7 +2,7 @@ stages:
     - build
     
 variables:
-    VLC_DEBIAN_IMAGE: registry.videolan.org/vlc-debian-unstable:20200229201904
+    VLC_DEBIAN_IMAGE: registry.videolan.org/vlc-debian-llvm-mingw:20200703084018
 
 vlc-rs-build:
     tags:
