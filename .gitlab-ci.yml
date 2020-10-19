@@ -14,4 +14,8 @@ vlc-rs-build:
     script:
         - curl https://sh.rustup.rs -sSf | sh -s -- -y
         - source $HOME/.cargo/env
+        - wget https://artifacts.videolan.org/vlc/nightly-win32/20201018-0423/vlc-4.0.0-dev-win32-2e6870c2.7z
+        - 7z x vlc-4.0.0-dev-win32-2e6870c2.7z
+        - rm -rf vlc-4.0.0-dev-win32-2e6870c2.7z
+        - export PKG_CONFIG_PATH="$(pwd)/vlc-4.0.0-dev/sdk/lib/pkgconfig/libvlc.pc"
         - cargo build --all
