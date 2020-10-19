@@ -2,7 +2,7 @@ stages:
     - build
     
 variables:
-    VLC_DEBIAN_IMAGE: registry.videolan.org/vlc-debian-llvm-mingw:20200703084018
+    VLC_UBUNTU_IMAGE: registry.videolan.org/vlc-ubuntu-bionic:20190627090437
 
 vlc-rs-build:
     tags:
@@ -10,7 +10,7 @@ vlc-rs-build:
         - amd64
     stage: build
     image:
-        name: $VLC_DEBIAN_IMAGE
+        name: $VLC_UBUNTU_IMAGE
     script:
         - curl https://sh.rustup.rs -sSf | sh -s -- -y
         - source $HOME/.cargo/env
