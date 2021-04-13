@@ -28,14 +28,13 @@ mod windows {
         );
 
         generate_lib_from_dll(&out_dir, &vs_exe_path, &vlc_path);
-        println!("cargo:rustc-link-search=all={}", out_dir.display());
-        // NOTE: Linking fails with
+        println!("cargo:rustc-link-search=native={}", out_dir.display());
+        // NOTE: Without this directive, linking fails with:
         //       ```
         //       error LNK2019: unresolved external symbol vsnprintf referenced in function _{MangledSymbolName}
         //          msvcrt.lib(vsnprintf.obj) : error LNK2001: unresolved external symbol vsnprintf
         //          msvcrt.lib(vsnprintf.obj) : error LNK2001: unresolved external symbol _vsnprintf
         //       ```
-        //       without this.
         //       https://stackoverflow.com/a/34230122
         println!("cargo:rustc-link-lib=dylib=legacy_stdio_definitions");
     }
