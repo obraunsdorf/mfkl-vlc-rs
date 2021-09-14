@@ -55,6 +55,7 @@ mod windows {
             .output()
             .unwrap();
         let exports = String::from_utf8(exports.stdout).unwrap();
+        println!("{}", exports);
 
         let mut vlc_def = String::from("EXPORTS\n");
         for line in exports.lines() {
