@@ -10,6 +10,22 @@ use libc::{c_void, c_uint};
 use crate::enums::{State, Position};
 use std::mem::transmute;
 
+use std::ffi::CString;
+use sys::libvlc_video_marquee_option_t::{libvlc_marquee_Text, libvlc_marquee_Enable, libvlc_marquee_X, libvlc_marquee_Color, libvlc_marquee_Opacity, libvlc_marquee_Size, libvlc_marquee_Timeout, libvlc_marquee_Position};
+
+#[derive(Default)]
+pub struct MarqueeOption {
+    pub color: Option<u32>,
+    pub opacity: Option<u32>,
+    pub position: Option<u32>,
+    pub refresh: Option<u32>,
+    pub size: Option<u32>,
+    pub timeout: Option<u32>,
+    pub x: Option<u32>,
+    pub y: Option<u32>,
+}
+
+
 /// A LibVLC media player plays one media (usually in a custom drawable).
 pub struct MediaPlayer {
     pub(crate) ptr: *mut sys::libvlc_media_player_t,
@@ -27,6 +43,60 @@ impl MediaPlayer {
                 return None;
             }
             Some(MediaPlayer{ptr: p})
+        }
+    }
+
+    pub fn show_marqee_text(&self, text: &str, option: &MarqueeOption) -> Result<(), &'static str> {
+        unsafe {
+            if let Ok(c_string) = CString::new(text) {
+                sys::libvlc_video_set_marquee_string(self.ptr,
+                                                     libvlc_marquee_Text as u32,
+                                                     c_string.as_ptr());
+                if let Some(x) = option.x {
+                    sys::libvlc_video_set_marquee_int(self.ptr,
+                                                      libvlc_marquee_X as u32,
+                                                      x as i32);
+                }
+
+                /* // TOOO: why does this not work?
+                sys::libvlc_video_set_marquee_int(self.ptr,
+                                                  libvlc_marquee_Y as u32,
+                                                  option.y as i32);*/
+                if let Some(color) = option.color {
+                    sys::libvlc_video_set_marquee_int(self.ptr,
+                                                      libvlc_marquee_Color as u32,
+                                                      color as i32);
+                }
+
+                if let Some(opacity) = option.opacity {
+                    sys::libvlc_video_set_marquee_int(self.ptr,
+                                                      libvlc_marquee_Opacity as u32,
+                                                      opacity as i32);
+                }
+
+                if let Some(size) = option.size {
+                    sys::libvlc_video_set_marquee_int(self.ptr,
+                                                      libvlc_marquee_Size as u32,
+                                                      size as i32);
+                }
+
+                if let Some(timeout) = option.timeout {
+                    sys::libvlc_video_set_marquee_int(self.ptr,
+                                                      libvlc_marquee_Timeout as u32,
+                                                      timeout as i32);
+                }
+
+                if let Some(position) = option.position {
+                    sys::libvlc_video_set_marquee_int(self.ptr,
+                                                      libvlc_marquee_Position as u32,
+                                                      position as i32);
+                }
+
+                sys::libvlc_video_set_marquee_int(self.ptr, libvlc_marquee_Enable as u32, 1);
+                Ok(())
+            } else {
+            Err("could not create CString")
+            }
         }
     }
 
